@@ -14,6 +14,7 @@ signal ball_collided_with_paddle()
 
 func _ready():
 	gravity_scale = 0
+	contact_monitor = true
 	reset()
 	
 func _integrate_forces(state):
@@ -21,9 +22,6 @@ func _integrate_forces(state):
 		_resetPosition()
 		pendingReset = false
 	else:
-		if (increaseSpeedOnCollision and _ballCollidedWithBody(state)):
-			emit_signal("ball_collided_with_paddle")
-			_updateBallSpeed()
 		_updateVelocity()
 
 func _resetPosition() -> void:
@@ -56,3 +54,9 @@ func reset() -> void:
 	
 func launch() -> void:
 	linear_velocity = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * speed
+
+func _on_body_entered(body: Node) -> void:
+	if body is CharacterBody2D:
+		emit_signal("ball_collided_with_paddle")
+		if increaseSpeedOnCollision:
+			_updateBallSpeed()

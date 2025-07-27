@@ -9,6 +9,7 @@ func _ready() -> void:
 	# default settings
 	GameSettings.difficulty = GameSettings.Difficulty.medium
 	GameSettings.winScore = 3
+	GameSettings.enableSound = true
 	%StartButton.grab_focus()
 
 func _on_start_pressed() -> void:

@@ -41,7 +41,7 @@ func _ready() -> void:
 	
 	match GameSettings.difficulty:
 		GameSettings.Difficulty.easy:
-			ball.initialSpeed = 200
+			ball.initialSpeed = 300
 			ball.increaseSpeedOnCollision = false
 			cpu.speed = 100
 		GameSettings.Difficulty.medium:
@@ -66,6 +66,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("action_exit"):
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 	elif gameState == GameState.over and not ignoreInput:
+		print(event)
 		_restartGame()
 		
 func _setupAudio() -> void:

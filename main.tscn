@@ -118,5 +118,6 @@ text = "GAME OVER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="body_entered" from="Ball" to="Ball" method="_on_body_entered"]
 [connection signal="body_entered" from="Barriers/Left" to="Barriers/Left" method="_on_body_entered"]
 [connection signal="body_entered" from="Barriers/Right" to="Barriers/Right" method="_on_body_entered"]
