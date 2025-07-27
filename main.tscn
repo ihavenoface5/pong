@@ -1,0 +1,122 @@
+[gd_scene load_steps=13 format=3 uid="uid://cegegnpn4i41n"]
+
+[ext_resource type="PackedScene" uid="uid://jfudbx5q6nso" path="res://scenes/paddle.tscn" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://bq7yooya10d80" path="res://game.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://dy25aek53cvf7" path="res://scenes/ball.tscn" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://blpni8cqfa8tw" path="res://scenes/ball.gd" id="4_lquwl"]
+[ext_resource type="Script" uid="uid://dlfqsolnf5qmu" path="res://scenes/cpu_paddle.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://x0hemuubsf87" path="res://scenes/left.gd" id="6_7mycd"]
+[ext_resource type="Script" uid="uid://5ni6o2a8rbw8" path="res://scenes/right.gd" id="7_272bh"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_h2yge"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_1bvp3"]
+normal = Vector2(0, 1)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_h2yge"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
+size = Vector2(10, 480)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7mycd"]
+size = Vector2(10, 480)
+
+[node name="Main" type="Node"]
+
+[node name="Game" type="Node" parent="."]
+script = ExtResource("1_1bvp3")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Ball" parent="." instance=ExtResource("2_h2yge")]
+unique_name_in_owner = true
+z_index = 1
+position = Vector2(360, 240)
+collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_h2yge")
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("4_lquwl")
+
+[node name="Paddle" parent="." instance=ExtResource("1_0xm2m")]
+position = Vector2(100, 240)
+scale = Vector2(4, 4)
+collision_layer = 2
+collision_mask = 2
+motion_mode = 1
+slide_on_ceiling = false
+
+[node name="CpuPaddle" parent="." instance=ExtResource("1_0xm2m")]
+position = Vector2(620, 240)
+scale = Vector2(4, 4)
+collision_layer = 2
+collision_mask = 2
+slide_on_ceiling = false
+script = ExtResource("5_lquwl")
+
+[node name="Barriers" type="Node" parent="."]
+
+[node name="Top" type="StaticBody2D" parent="Barriers"]
+collision_layer = 2
+collision_mask = 2
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barriers/Top"]
+shape = SubResource("WorldBoundaryShape2D_1bvp3")
+
+[node name="Bottom" type="StaticBody2D" parent="Barriers"]
+position = Vector2(0, 480)
+collision_layer = 2
+collision_mask = 2
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barriers/Bottom"]
+shape = SubResource("WorldBoundaryShape2D_h2yge")
+
+[node name="Left" type="Area2D" parent="Barriers"]
+unique_name_in_owner = true
+position = Vector2(85, 240)
+script = ExtResource("6_7mycd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barriers/Left"]
+shape = SubResource("RectangleShape2D_lquwl")
+
+[node name="Right" type="Area2D" parent="Barriers"]
+unique_name_in_owner = true
+position = Vector2(635, 240)
+script = ExtResource("7_272bh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barriers/Right"]
+shape = SubResource("RectangleShape2D_7mycd")
+
+[node name="Score" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 328.0
+offset_right = 394.0
+offset_bottom = 49.0
+text = "Player: 0
+CPU: 0"
+
+[node name="GameOver" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+offset_left = 265.0
+offset_top = 150.0
+offset_right = 357.0
+offset_bottom = 173.0
+scale = Vector2(2, 2)
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_entered" from="Barriers/Left" to="Barriers/Left" method="_on_body_entered"]
+[connection signal="body_entered" from="Barriers/Right" to="Barriers/Right" method="_on_body_entered"]
