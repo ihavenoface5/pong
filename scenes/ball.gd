@@ -17,7 +17,7 @@ func _ready():
 	contact_monitor = true
 	reset()
 	
-func _integrate_forces(state):
+func _integrate_forces(_state):
 	if (pendingReset):
 		_resetPosition()
 		pendingReset = false
