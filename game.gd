@@ -32,8 +32,8 @@ func _ready() -> void:
 	leftBarrier.connect("left_barrier_entered", cpuScored)
 	rightBarrier.connect("right_barrier_entered", playerScored)
 	
-	if GameSettings.enableSound:
-		_setupAudio()
+	if GameSettings.volume > 0:
+		_setupAudio(GameSettings.volume)
 		ball.connect("ball_collided_with_paddle", playBallHitSound)
 	
 	_updateScoreLabel()
@@ -69,13 +69,15 @@ func _input(event: InputEvent) -> void:
 		print(event)
 		_restartGame()
 		
-func _setupAudio() -> void:
+func _setupAudio(volume: float) -> void:
 	for i in num_hit_sounds:
 		var player = AudioStreamPlayer.new()
+		player.volume_linear = volume
 		player.stream = load("res://assets/pop%d.mp3" % i)
 		add_child(player)
 		soundPool.append(player)
 	add_child(endGameSound)
+	endGameSound.volume_linear = volume
 
 func resetGame() -> void:
 	paddle.reset()
@@ -105,7 +107,7 @@ func playBallHitSound() -> void:
 
 func _handleGameOver() -> void:
 	ignoreInput = true
-	if GameSettings.enableSound:
+	if GameSettings.volume > 0:
 		_playGameOverSound()
 	_showGameOver(true)
 	gameState = GameState.over
